@@ -1,122 +1,149 @@
-[1mName[0m
-    [1mPod::Modifier[0m - Add sections to an existing POD dynamically.
+=head1 Name
 
-[1mSYNOPSYS[0m
-    Usage :
+B<Pod::Modifier> - Add sections to an existing POD dynamically.
 
-    use Pod::Modifier;
+=head1 SYNOPSYS
 
-    # To get full path to current module
+Usage :
 
-    my $pkg = ref(__PACKAGE__);
+use Pod::Modifier;
 
-    $pkg =~ s/::/\//g;
+# To get full path to current module
 
-    $pkg .= ".pm";
+my $pkg = ref(__PACKAGE__);
 
-    my $pkg_fp = $INC{$pkg};
+$pkg =~ s/::/\//g;
 
-    # Create modifier object
+$pkg .= ".pm";
 
-    my $modifier = Pod::Modifier->new(PACKAGE=>"$pkg_fp");
+my $pkg_fp = $INC{$pkg};
 
-    # Add a section 'OPTIONS' to the Pod of current file,
+# Create modifier object
 
-    # defined in list of files having paths in array @bases. to be indexed in
-    output at
+my $modifier = Pod::Modifier->new(PACKAGE=>"$pkg_fp");
 
-    # index '6', and aliased as 'GLOBAL OPTIONS'
+# Add a section 'OPTIONS' to the Pod of current file,
 
-    $modifier->addSection(SECTION=>"OPTIONS",SECTION_INDEX=>6,BASE=>\@bases,AL
-    IAS=>"GLOBAL OPTIONS");
+# defined in list of files having paths in array @bases. to be indexed in output at
 
-    # To print on pager, returns undef in this case.
+# index '6', and aliased as 'GLOBAL OPTIONS'
 
-    # Pager used is less, with -R option, Parser used is Pod::Perldoc::ToTerm
+$modifier->addSection(SECTION=>"OPTIONS",SECTION_INDEX=>6,BASE=>\@bases,ALIAS=>"GLOBAL OPTIONS");
 
-    # To use own pod parser and pager, use without PAGE argument, and process
-    the returned Pod string.
+# To print on pager, returns undef in this case.
 
-    $modifier->updatePod(PAGE=>1);
+# Pager used is less, with -R option, Parser used is Pod::Perldoc::ToTerm
 
-    # To return as string
+# To use own pod parser and pager, use without PAGE argument, and process the returned Pod string.
 
-    my $pod_string = $modifier->updatePod();
+$modifier->updatePod(PAGE=>1);
+  
+# To return as string
 
-  [1mAPIs[0m
-   [1mnew (PACKAGE=[0m"/path/to/CurrentPackage.pm")>
-    Class constructor.
+my $pod_string = $modifier->updatePod();
 
-   [1maddSection ( BASE =[0m SCALAR|ARRAYREF
+=head2 APIs
+
+=head3 B<new (PACKAGE=>"/path/to/CurrentPackage.pm")>
+
+Class constructor.
+
+=head3 B<addSection ( BASE => SCALAR|ARRAYREF
     SECTION  => SCALAR 
     SECTION_INDEX => SCALAR
     ALIAS => SCALAR (optional) )
-    Interface to add a section 'SECTION', defined in file(s) given by 'BASE',
-    at index 'SECTION_INDEX', renamed in current Pod as 'ALIAS'.
 
-   [1mupdatePod(PAGE =[0m (0|1))>
-    Update and return the modified POD string, which can be parsed using Pod
-    parser of choice.
+Interface to add a section 'SECTION', defined in file(s) given by 'BASE', at index 'SECTION_INDEX',
+renamed in current Pod as 'ALIAS'.
 
-  [1mARGUMENTS[0m
-   [1mnew[0m(PACKAGE=>'$package')
-    "PACKAGE =>" [4mbase[0m
-        SCALAR Path to the current file, to (the Pod of) which additinal
-        sections are to be added.
+=head3 B<updatePod(PAGE => (0|1))>
 
-   [1maddSection[0m()
-    "BASE =>" [4mbase[0m
-        SCALAR The full path to perl module containing section to be added.
-        Or, ARRAYREF list of full paths of perl modules containing required
-        section.
+Update and return the modified POD string, which can be parsed using Pod parser of choice.
 
-    "SECTION =>" [4msection[0m
-        SCALAR Name of the head (1) section.
+=head2 ARGUMENTS
 
-    "SECTION_INDEX =>" [4mindex[0m
-        SCALAR Attribute to set position of insertion for this section.
+=head3 B<new>(PACKAGE=>'$package')
 
-    "ALIAS =>" [4malias[0m
-        For multiple files, that is, where BASE is array reference, an alias
-        can be used to rename the combined sections, using ALIAS.
+=over 4
 
-   [1mupdatePod[0m(PAGE=>0|1)
-    "PAGE =>" [4m0|1[0m
-        SCALAR Without an argument, or for PAGE=>0, the function will return
-        the Pod as a string which can be parsed by parser of choice. For
-        PAGE=>1, '/bin/less' is used for paging and Pod::Perldoc::ToTerm for
-        parsing. The output is, thus, immediately paged to STDOUT in this
-        case.
+=item C<PACKAGE =E<gt>> I<base>
 
-[1mCAVEATS[0m
-    While paging directly using this module, it is assumed the pager 'less' is
-    available in system, which is then used with the -R option for constant
-    repainting of terminal/ std output. For proper cross platform
-    compatibility it is advised not to use this module for paging. Assumption
-    is made that sections in modules would be starting as =head(n) and ending
-    with =head(n) of the next section, or EOF, whichever first.
+SCALAR Path to the current file, to (the Pod of) which additinal sections are to be added.
 
-[1mSUPPORT[0m
-    This module is managed in a GitHub repository,
-    <https://github.com/codenho/PodModify> Feel free to fork and contribute,
-    or to clone and send patches!
+=back
 
-    Please use <https://github.com/codenho/PodModify/issues/new> to file a bug
-    report.
+=head3 B<addSection>()
 
-    More general questions or discussion about POD should be sent to the
-    "pod-people@perl.org" mail list. Send an empty email to
-    "pod-people-subscribe@perl.org" to subscribe.
+=over 4
 
-[1mAUTHOR[0m
-    Udhav Verma <vermaudh@cpan.org>
+=item C<BASE =E<gt>> I<base>
 
-[1mLICENSE[0m
-    Pod::Usage (the distribution) is licensed under the same terms as Perl.
+SCALAR The full path to perl module containing section to be added. Or,
+ARRAYREF list of full paths of perl modules containing required section.
 
-[1mACKNOWLEDGMENTS[0m
-    Bincy Sarah Thomas, for feedback and help in writing this module.
+=item C<SECTION =E<gt>> I<section>
 
-[1mSEE ALSO[0m
-    Pod::Usage, Pod::Perldoc, Pod::Select
+SCALAR Name of the head (1) section.
+
+=item C<SECTION_INDEX =E<gt>> I<index>
+
+SCALAR Attribute to set position of insertion for this section.
+
+=item C<ALIAS =E<gt>> I<alias>
+
+For multiple files, that is, where BASE is array reference, an alias can be used to rename the combined sections, using ALIAS.
+
+=back
+
+=head3 B<updatePod>(PAGE=>0|1)
+
+=over 4
+
+=item C<PAGE =E<gt>> I<0|1>
+
+SCALAR Without an argument, or for PAGE=>0, the function will return the Pod as a string which can be parsed by
+parser of choice. For PAGE=>1, '/bin/less' is used for paging and Pod::Perldoc::ToTerm for parsing. The output is, thus,
+immediately paged to STDOUT in this case.
+
+=back
+
+=head1 CAVEATS
+
+While paging directly using this module, it is assumed the pager 'less' is available in system, which is then
+used with the -R option for constant repainting of terminal/ std output.
+For proper cross platform compatibility it is advised not to use this module for paging.
+Assumption is made that sections in modules would be starting as =head(n) and ending with =head(n)
+of the next section, or EOF, whichever first.
+
+=head1 SUPPORT
+
+This module is managed in a GitHub repository,
+L<https://github.com/codenho/PodModify> Feel free to fork and contribute, or
+to clone and send patches!
+
+Please use L<https://github.com/codenho/PodModify/issues/new> to file a bug
+report.
+
+More general questions or discussion about POD should be sent to the
+C<pod-people@perl.org> mail list. Send an empty email to
+C<pod-people-subscribe@perl.org> to subscribe.
+
+=head1 AUTHOR
+
+Udhav Verma E<lt>vermaudh@cpan.orgE<gt>
+
+=head1 LICENSE
+
+Pod::Modifier (the distribution) is licensed under the same terms as Perl5.
+
+=head1 ACKNOWLEDGMENTS
+
+Bincy Sarah Thomas, for feedback and help in writing this module.
+
+=head1 SEE ALSO
+
+L<Pod::Usage>, L<Pod::Perldoc>, L<Pod::Select>
+
+
+=cut
 
