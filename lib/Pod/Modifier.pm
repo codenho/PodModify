@@ -168,11 +168,22 @@ sub _page {
 
 __END__
 
-=head1 Name
+=head1 NAME
 
 B<Pod::Modifier> - Add sections to an existing POD dynamically.
 
+=head1 DESCRIPTION
+
+B<Pod::Modifier> allows adding to a Perl Modules' POD, dynamically, sections from POD of other Perl Modules.
+The alias (new 'head or header' to be given to) and index of appearance of these added sections can be changed
+as per provided APIs. B<Pod::Modifier> by default would return a string of modified POD, which can then be 
+parsed by a POD Parser of choice, optionally though, it can also act as a "POD to Usage", and it prints to
+the terminal using 'less' pager.
+
 =head1 SYNOPSYS
+
+Some basic usage of this module is presented through an example below, please check APIs and Pod::SectionToAdd
+for more advanced options.
 
 Usage :
 
@@ -194,13 +205,13 @@ my $modifier = Pod::Modifier->new(PACKAGE=>"$pkg_fp");
 
 # Add a section 'OPTIONS' to the Pod of current file,
 
-# defined in list of files having paths in array @bases. to be indexed in output at
+# defined in list of files having paths in array @bases. to be indexed in the modified POD at
 
 # index '6', and aliased as 'GLOBAL OPTIONS'
 
 $modifier->addSection(SECTION=>"OPTIONS",SECTION_INDEX=>6,BASE=>\@bases,ALIAS=>"GLOBAL OPTIONS");
 
-# To print on pager, returns undef in this case.
+# To print the modified POD on pager, returns undef in this case.
 
 # Pager used is less, with -R option, Parser used is Pod::Perldoc::ToTerm
 
@@ -208,7 +219,7 @@ $modifier->addSection(SECTION=>"OPTIONS",SECTION_INDEX=>6,BASE=>\@bases,ALIAS=>"
 
 $modifier->updatePod(PAGE=>1);
   
-# To return as string
+# To return it as string
 
 my $pod_string = $modifier->updatePod();
 
