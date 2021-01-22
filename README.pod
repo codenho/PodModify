@@ -33,21 +33,25 @@ my $pkg_fp = $INC{$pkg};
 
 my $modifier = Pod::Modifier->new(PACKAGE=>"$pkg_fp");
 
-# Add a section 'OPTIONS' to the Pod of current file,
+# The following usage of addSection API will add a section 'OPTIONS' to the Pod of current file,
 
-# defined in list of files having paths in array @bases. to be indexed in the modified POD at
+# and this new section is expected to be defined in list of files having their paths in array @bases.
 
-# index '6', and aliased as 'GLOBAL OPTIONS'
+# In the modified POD, this will be now at index '6', and aliased as 'GLOBAL OPTIONS'.
+
+# That is, when the modified POD is printed, the section(s) 'OPTIONS' (combined if multiple files in @bases)
+
+# will now show up as 6th section aliased as 'GLOBAL OPTIONS' in the new POD.
 
 $modifier->addSection(SECTION=>"OPTIONS",SECTION_INDEX=>6,BASE=>\@bases,ALIAS=>"GLOBAL OPTIONS");
 
-# To print the modified POD on pager, returns undef in this case.
+# To print the modified POD on pager as help, PAGE=>1 is used.
 
-# Pager used is less, with -R option, Parser used is Pod::Perldoc::ToTerm
+# The pager used is less, with -R option, Parser used is Pod::Perldoc::ToTerm
 
-# To use own pod parser and pager, use without PAGE argument, and process the returned Pod string.
+# To use own pod parser and pager, use without PAGE argument, or PAGE=>0, and process the returned Pod string.
 
-$modifier->updatePod(PAGE=>1);
+$modifier->updatePod(PAGE=>1); # returns an undef with PAGE=>1
   
 # To return it as string
 
